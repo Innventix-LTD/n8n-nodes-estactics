@@ -1,0 +1,65 @@
+{
+	"name": "Website form to Estactics (HTTP Request)",
+	"nodes": [
+		{
+			"parameters": {
+				"content": "## Create Estactics leads without the Estactics node\n\nFor n8n instances where the Estactics node can't be installed. Prefer the Estactics node when you can: it has a campaign picker, retries and clearer errors.\n\n1. Create an Estactics API token with the **Clients → Manage** permission (Account > Tokens in Estactics).\n2. In **Create a lead**, create a **Header Auth** credential: Name `Authorization`, Value `Bearer atsec_...` (your token).\n3. Replace `YOUR_CAMPAIGN_CODE` in the JSON body with your campaign code (on the campaign page in Estactics).\n4. Change the field names after `$json.body.` to the names your form sends, then activate the workflow.",
+				"height": 340,
+				"width": 560
+			},
+			"id": "9b2c1d0e-3f4a-4b5c-8d6e-7f8091a2b3c4",
+			"name": "Setup",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [-80, -380]
+		},
+		{
+			"parameters": {
+				"httpMethod": "POST",
+				"path": "estactics-lead-http",
+				"responseMode": "onReceived",
+				"options": {}
+			},
+			"id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+			"name": "Website form",
+			"type": "n8n-nodes-base.webhook",
+			"typeVersion": 2,
+			"position": [0, 0],
+			"webhookId": "4d5e6f70-8192-4a3b-9c4d-5e6f7a8b9c0d"
+		},
+		{
+			"parameters": {
+				"method": "POST",
+				"url": "https://backend.estactics.com/api/clients/create",
+				"authentication": "genericCredentialType",
+				"genericAuthType": "httpHeaderAuth",
+				"sendBody": true,
+				"specifyBody": "json",
+				"jsonBody": "={{ {\n  campaignCode: 'YOUR_CAMPAIGN_CODE',\n  firstName: $json.body.firstName,\n  lastName: $json.body.lastName,\n  email: $json.body.email,\n  phone: String($json.body.phone ?? ''),\n  utmSource: $json.body.utm_source || 'website',\n  form: { Budget: $json.body.budget, Rooms: $json.body.rooms },\n  throwErrorOnClientExists: false\n} }}",
+				"options": {}
+			},
+			"id": "6e7f8091-a2b3-4c4d-8e5f-60718293a4b5",
+			"name": "Create a lead",
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [260, 0]
+		}
+	],
+	"connections": {
+		"Website form": {
+			"main": [
+				[
+					{
+						"node": "Create a lead",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"pinData": {}
+}

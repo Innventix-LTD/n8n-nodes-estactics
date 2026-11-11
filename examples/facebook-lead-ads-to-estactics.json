@@ -1,0 +1,83 @@
+{
+	"name": "Facebook Lead Ads to Estactics",
+	"nodes": [
+		{
+			"parameters": {
+				"content": "## Facebook Lead Ads to Estactics\n\nEvery new Facebook or Instagram lead form submission becomes an Estactics lead.\n\n1. In **New Facebook lead**, connect Facebook and choose the page and the lead form.\n2. In **Create a lead**, choose your **Estactics API** credential and the campaign.\n3. Activate the workflow.\n\nThe name is split when the form asks for the full name. Every other question of the form (e.g. budget, area) is saved on the lead registration in Estactics. The form, ad set and ad names are saved as UTM fields.",
+				"height": 320,
+				"width": 520
+			},
+			"id": "2f3e4d5c-6b7a-4891-a2b3-c4d5e6f70819",
+			"name": "Setup",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [-80, -360]
+		},
+		{
+			"parameters": {
+				"page": {
+					"__rl": true,
+					"mode": "list",
+					"value": ""
+				},
+				"form": {
+					"__rl": true,
+					"mode": "list",
+					"value": ""
+				},
+				"options": {}
+			},
+			"id": "7a8b9c0d-1e2f-4a3b-8c4d-5e6f7a8b9c0d",
+			"name": "New Facebook lead",
+			"type": "n8n-nodes-base.facebookLeadAdsTrigger",
+			"typeVersion": 1,
+			"position": [0, 0],
+			"webhookId": "b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e"
+		},
+		{
+			"parameters": {
+				"resource": "lead",
+				"operation": "create",
+				"campaign": {
+					"__rl": true,
+					"mode": "list",
+					"value": ""
+				},
+				"firstName": "={{ $json.data.first_name || String($json.data.full_name || '').trim().split(/\\s+/)[0] }}",
+				"lastName": "={{ $json.data.last_name || String($json.data.full_name || '').trim().split(/\\s+/).slice(1).join(' ') }}",
+				"email": "={{ $json.data.email }}",
+				"phone": "={{ $json.data.phone_number }}",
+				"additionalFields": {
+					"utmSource": "facebook",
+					"utmMedium": "paid_social",
+					"utmCampaign": "={{ $json.form.name }}",
+					"utmTerm": "={{ $json.adset.name }}",
+					"utmContent": "={{ $json.ad.name }}",
+					"customFields": "={{ { form: Object.fromEntries(Object.entries($json.data).filter(([question]) => !['full_name', 'first_name', 'last_name', 'email', 'phone_number'].includes(question))) } }}"
+				}
+			},
+			"id": "c3d4e5f6-a7b8-4c9d-8e0f-1a2b3c4d5e6f",
+			"name": "Create a lead",
+			"type": "@estactics/n8n-nodes-estactics.estactics",
+			"typeVersion": 1,
+			"position": [260, 0]
+		}
+	],
+	"connections": {
+		"New Facebook lead": {
+			"main": [
+				[
+					{
+						"node": "Create a lead",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"pinData": {}
+}
