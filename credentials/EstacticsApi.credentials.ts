@@ -2,15 +2,12 @@ import type { IAuthenticateGeneric, Icon, ICredentialTestRequest, ICredentialTyp
 
 const TOKENS_PAGE_URL = 'https://app.estactics.com/dashboard/account/tokens';
 
+// INFO: n8n shows credential notices as one paragraph (line breaks and bold are removed, links are kept), so the steps are sentences.
 const SETUP_STEPS = [
-	'<b>How to get your Estactics API token</b>',
-	`1. In Estactics, open <a href="${TOKENS_PAGE_URL}" target="_blank">Account &gt; Tokens</a> and click <b>New token</b>.`,
-	'2. Name it (e.g. "n8n") and choose the expiration: <b>No expiration</b>, or a specific period (when it expires, update this credential with a new token). Click <b>Next</b>.',
-	'3. Copy the token (it starts with <code>atsec_</code>) and keep it, it is shown only once.',
-	'4. Click <b>Edit permissions</b>, enable <b>Clients → Manage</b> and <b>Marketing Campaigns → View</b>, then click <b>Save</b>.',
-	'5. Paste the token below and click <b>Save</b>.',
-	'Tip: create the token as the organization owner or an admin, so leads can be created in every campaign.',
-].join('<br>');
+	`Create the token in Estactics under <a href="${TOKENS_PAGE_URL}" target="_blank">Account &gt; Tokens</a>: click New token, name it (e.g. "n8n") and copy it, it starts with atsec_ and is shown only once.`,
+	'Then click Edit permissions and enable Clients → Manage and Marketing Campaigns → View.',
+	'Create it as the organization owner or an admin, so leads can be created in every campaign.',
+].join(' ');
 
 export class EstacticsApi implements ICredentialType {
 	name = 'estacticsApi';

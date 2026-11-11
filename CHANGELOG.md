@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- The credential setup steps are one readable paragraph, n8n shows credential notices without line breaks or bold text.
+
 ## 1.0.0
 
 - Estactics node with the **Lead → Create** operation: campaign picker (searchable list or code), name, email, phone, registration form answers, additional fields (location, language, notes, UTM) and custom fields JSON. Same request and output as the Estactics Zapier app.

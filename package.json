@@ -1,6 +1,6 @@
 {
 	"name": "@estactics/n8n-nodes-estactics",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Estactics real estate CRM node for n8n, create leads from any n8n workflow (e.g Facebook Lead Ads).",
 	"license": "MIT",
 	"homepage": "https://github.com/Innventix-LTD/n8n-nodes-estactics#readme",
