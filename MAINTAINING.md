@@ -35,9 +35,13 @@ with a version bump, also push the tag: replace `refs/heads/main` with `refs/tag
 
 ### npm
 
-- Publishing uses the `NPM_TOKEN` secret of the public repository: a Granular Access Token with **Read and write** on the
-  **`@estactics` scope** (selected under "Only select packages and scopes", a new package can't be selected by name).
-  A token without that scope gets a 404 on publish, a token that can't bypass 2FA gets `EOTP`.
+- Publishing uses npm **Trusted Publishing (OIDC)**, no token: the package trusts GitHub Actions, repository
+  `Innventix-LTD/n8n-nodes-estactics`, workflow `publish.yml` (permissions publish and stage publish). Check it with
+  `npm trust list @estactics/n8n-nodes-estactics`. Renaming `publish.yml` or the repository breaks publishing until the trust
+  is recreated (`npm trust revoke --id <id>`, then `npm trust github ... --allow-publish`).
+- The first version (1.0.0) was published with an `NPM_TOKEN` secret, since a trust can only be added to an existing package.
+  For reference: it needed a Granular Access Token with **Read and write** on the **`@estactics` scope**. A token without
+  that scope gets a 404 on publish, one that can't bypass 2FA gets `EOTP`. The secret is deleted.
 - npm may stage the version instead of publishing it ([staged publishing](https://docs.npmjs.com/cli/commands/npm-stage)):
   the publish job succeeds but the version isn't installable (a brand new package shows only `0.0.0-stage`). Approve it with
   npm 11.15 or later (Node 22.14+), as an `estactics` org owner with 2FA:
@@ -48,9 +52,7 @@ with a version bump, also push the tag: replace `refs/heads/main` with `refs/tag
   npm stage approve <stage-id>   # asks for the 2FA code, then publishes
   ```
 
-- Recommended next step: package settings → **Trusted Publishers** → GitHub Actions, owner `Innventix-LTD`, repository
-  `n8n-nodes-estactics`, workflow `publish.yml`, then delete the `NPM_TOKEN` secret and the token. `publish.yml` already
-  has the `id-token: write` permission it needs.
+- `publish.yml` needs the `id-token: write` permission for OIDC and provenance, keep it.
 
 ## Setup (done on 2026-11-11)
 
@@ -59,7 +61,7 @@ with a version bump, also push the tag: replace `refs/heads/main` with `refs/tag
    `N8N_MIRROR_DEPLOY_KEY` secret of the Estactics repository. Deploy keys must be allowed in the Innventix-LTD organization settings.
    To replace it: `ssh-keygen -t ed25519 -f n8n-mirror -N ""`, add `n8n-mirror.pub` as a deploy key with write access, update the
    secret with `n8n-mirror`, delete the old key and both local files.
-3. **npm** organization `estactics` and the `NPM_TOKEN` secret (see [npm](#npm)).
+3. **npm** organization `estactics` and Trusted Publishing for the package (see [npm](#npm)).
 4. **First release** 1.0.0: pushed by hand (it adds the workflow files, see above), published, staged version approved.
 
 ## n8n verification
