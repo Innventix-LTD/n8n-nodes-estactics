@@ -1,0 +1,19 @@
+{
+	"node": "@estactics/n8n-nodes-estactics.estactics",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Sales", "Marketing & Content"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/Innventix-LTD/n8n-nodes-estactics#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/Innventix-LTD/n8n-nodes-estactics#readme"
+			}
+		]
+	},
+	"alias": ["CRM", "Real Estate", "Lead", "Client", "Facebook Lead Ads"]
+}

@@ -1,0 +1,68 @@
+{
+	"name": "@estactics/n8n-nodes-estactics",
+	"version": "1.0.0",
+	"description": "Estactics real estate CRM node for n8n, create leads from any n8n workflow (e.g Facebook Lead Ads).",
+	"license": "MIT",
+	"homepage": "https://github.com/Innventix-LTD/n8n-nodes-estactics#readme",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"estactics",
+		"crm",
+		"real estate",
+		"leads"
+	],
+	"author": {
+		"name": "Innventix LTD",
+		"email": "support@estactics.com",
+		"url": "https://www.estactics.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Innventix-LTD/n8n-nodes-estactics.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Innventix-LTD/n8n-nodes-estactics/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"test": "n8n-node build && node --test \"test/**/*.test.js\"",
+		"sync-choices": "node scripts/sync-choices.mjs",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist",
+		"!dist/tsconfig.tsbuildinfo"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/EstacticsApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Estactics/Estactics.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "0.56.2",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^21.1.0",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}

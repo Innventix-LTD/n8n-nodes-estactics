@@ -1,0 +1,86 @@
+{
+	"name": "Website form to Estactics",
+	"nodes": [
+		{
+			"parameters": {
+				"content": "## Website form to Estactics\n\nYour website form posts its fields as JSON to the **Webhook** URL, every submission becomes an Estactics lead.\n\n1. In **Create a lead**, choose your **Estactics API** credential and the campaign.\n2. Change the field names after `$json.body.` to the names your form sends.\n3. Activate the workflow and point the form to the **Production URL** of the webhook.\n\nExample body: `{\"firstName\": \"Emma\", \"lastName\": \"Collins\", \"email\": \"emma@example.com\", \"phone\": \"+44 20 7946 0958\", \"budget\": \"1,000,000\", \"rooms\": \"4\", \"message\": \"Looking for a villa\"}`",
+				"height": 340,
+				"width": 520
+			},
+			"id": "6c5d1f1e-2b0a-4a8e-9d7c-1f2e3a4b5c60",
+			"name": "Setup",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [-80, -360]
+		},
+		{
+			"parameters": {
+				"httpMethod": "POST",
+				"path": "estactics-lead",
+				"responseMode": "onReceived",
+				"options": {}
+			},
+			"id": "0f1b6a52-6d0e-4c1d-9a3f-5b2c7d8e9f01",
+			"name": "Website form",
+			"type": "n8n-nodes-base.webhook",
+			"typeVersion": 2,
+			"position": [0, 0],
+			"webhookId": "8a1d7c3e-5f2b-4e6a-9c0d-2b3e4f5a6b7c"
+		},
+		{
+			"parameters": {
+				"resource": "lead",
+				"operation": "create",
+				"campaign": {
+					"__rl": true,
+					"mode": "list",
+					"value": ""
+				},
+				"firstName": "={{ $json.body.firstName }}",
+				"lastName": "={{ $json.body.lastName }}",
+				"email": "={{ $json.body.email }}",
+				"phone": "={{ $json.body.phone }}",
+				"registrationForm": {
+					"answers": [
+						{
+							"question": "Budget",
+							"answer": "={{ $json.body.budget }}"
+						},
+						{
+							"question": "Rooms",
+							"answer": "={{ $json.body.rooms }}"
+						}
+					]
+				},
+				"additionalFields": {
+					"notes": "={{ $json.body.message }}",
+					"utmSource": "={{ $json.body.utm_source || 'website' }}",
+					"utmMedium": "={{ $json.body.utm_medium }}",
+					"utmCampaign": "={{ $json.body.utm_campaign }}"
+				}
+			},
+			"id": "3e7c9b1a-8d4f-4b2e-a6c5-7d8e9f0a1b2c",
+			"name": "Create a lead",
+			"type": "@estactics/n8n-nodes-estactics.estactics",
+			"typeVersion": 1,
+			"position": [260, 0]
+		}
+	],
+	"connections": {
+		"Website form": {
+			"main": [
+				[
+					{
+						"node": "Create a lead",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"pinData": {}
+}
