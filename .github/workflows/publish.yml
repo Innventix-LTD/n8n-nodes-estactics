@@ -72,6 +72,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Nothing pushes back to the repository, so don't keep the GITHUB_TOKEN in the git config.
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
